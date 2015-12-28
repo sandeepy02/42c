@@ -1,0 +1,1749 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <title>42 Charts</title>
+    <!-- Path to Framework7 Library CSS-->
+    <link rel="stylesheet" href="tools/Framework7-1.3.5/dist/css/framework7.ios.min.css">
+    <link rel="stylesheet" href="tools/Framework7-1.3.5/dist/css/framework7.ios.colors.min.css">
+    <link rel="stylesheet" href="tools/Framework7-1.3.5/dist/css/framework7.material.colors.min.css">
+	
+    <link rel="shortcut icon" type="image/png" href="tools/./422.gif" />
+    <!-- Path to your custom app styles-->
+    <link rel="stylesheet" href="tools/Framework7-1.3.5/my-app.css">
+    <link rel="stylesheet" href="tools/Framework7-1.3.5/toast.css">
+    <link rel="stylesheet" href="tools/Framework7-1.3.5/welcomescreen.css">
+ <!--
+         <script type="text/javascript" src="cordova.js"></script>
+        <script type="text/javascript" src="js/index.js"></script>
+        <script type="text/javascript">
+            app.initialize();
+        </script>
+--><!--
+    <link rel="stylesheet" href="tools/shepherd-master/dist/css/shepherd-theme-arrows.css">
+    <link rel="stylesheet" href="tools/shepherd-master/dist/css/shepherd-theme-arrows-plain-buttons.css">
+    <link rel="stylesheet" href="tools/shepherd-master/dist/css/shepherd-theme-default.css">
+    <link rel="stylesheet" href="tools/shepherd-master/dist/css/shepherd-theme-dark.css">
+    <link rel="stylesheet" href="tools/shepherd-master/dist/css/shepherd-theme-square.css">
+-->    <!--
+    <link rel="stylesheet" href="./intro.js-1.1.1/minified/introjs.min.css">
+    <script src="./intro.js-1.1.1/intro.js"></script>
+ -->
+<!--    <script src="tools/shepherd-master/dist/js/tether.js"></script>
+    <script src="tools/shepherd-master/dist/js/shepherd.min.js"></script>
+-->    <script src="tools/d3.js"></script>
+    <script src="tools/techan.js"></script>
+    <style>
+	 .circleSY		{
+		float:right;
+		border-radius: 50%;
+		behavior: url(PIE.htc); /* remove if you don't care about IE8 */
+		width: 20px;
+		height: 20px;
+		padding: 2px;
+		background: transparent;
+		border: 1px solid #007aff;
+		color: #007aff;
+		text-align: center;
+		font-size: 12px;
+		}
+      .panel {
+        /*background: white;*/
+      }
+      
+      .page {
+        /*background: white;*/
+      }
+      
+      .content-block {
+        margin: 3px 0 3px 0;
+      }
+      
+      .picker-modal {
+        height: auto;
+        /*background: #eee;*/
+      }
+      
+      .shepherd-content * {
+        font-size: 12px!important;
+      }
+      
+      .shepherd-element.shepherd-theme-default {
+        max-width: 600px!important;
+        opacity: 1;
+      }
+      
+      .welcomescreen-text {
+        font-size: 1.5rem;
+        margin-bottom: 5%;
+      }
+      
+      .welcomescreen-picture {
+        margin-top: 10%;
+      }
+      
+      .shepherd-element.shepherd-theme-default.shepherd-has-title .shepherd-content header a.shepherd-cancel-link {
+        color: black;
+        font-weight: bold;
+      }
+      
+      .minimal-button {
+        background: transparent!important;
+        color: #007aff!important;
+        text-transform: capitalize!important;
+      }
+      
+      .leftB {
+        float: left;
+      }
+      
+      .rightB {
+        float: right;
+      }
+      
+      .shepherd-buttons {
+        text-align: center!important;
+      }
+
+    </style>
+     <style type="text/css">
+      path.macd {
+        stroke: #000000;
+      }
+      
+      .supstance1 path {
+        stroke: green;
+        stroke-width: 3;
+        stroke: 2, 2;
+      }
+      
+      .supstance2 path {
+        stroke: red;
+        stroke-width: 3;
+        stroke: 2, 2;
+      }
+      
+      .mouseover .supstance1 path {
+        stroke-width: 5;
+      }
+      
+      .mouseover .supstance2 path {
+        stroke-width: 5;
+      }
+      
+      .dragging .supstance1 path {
+        stroke: darkgreen;
+      }
+      
+      .dragging .supstance2 path {
+        stroke: brown;
+      }
+      
+      .axis path,
+      .axis line {
+        fill: none;
+        stroke: #000;
+        shape-rendering: crispEdges;
+      }
+      
+      path {
+        fill: none;
+        stroke-width: 1;
+      }
+      
+      path.candle {
+        stroke: #000000;
+      }
+      
+      path.candle.body {
+        stroke-width: 0;
+      }
+      
+      path.candle.up {
+        fill: #00b3f8;
+        stroke: #00b3f8;
+      }
+      
+      path.candle.down {
+        fill: #004b7e;
+        stroke: #004b7e;
+      }
+      
+      .ma-0 path.line {
+        stroke: #1f77b4;
+      }
+      
+      .ma-1 path.line {
+        stroke: #aec7e8;
+      }
+      
+      path.volume {
+        fill: #EEEEEE;
+      }
+      
+      .crosshair path.wire {
+        stroke: #DDDDDD;
+      }
+      
+      .crosshair .axisannotation path {
+        fill: #DDDDDD;
+      }
+      
+      .crosshair {
+        cursor: crosshair;
+      }
+      
+      .tradearrow path.tradearrow {
+        stroke: none;
+      }
+      
+      .tradearrow path.buy {
+        fill: red;
+      }
+      
+      .tradearrow path.sell {
+        fill: lightgreen;
+      }
+      
+      .tradearrow path.highlight {
+        fill: none;
+        stroke-width: 2;
+      }
+      
+      .tradearrow path.highlight.buy {
+        stroke: red;
+      }
+      
+      .tradearrow path.highlight.sell {
+        stroke: lightgreen;
+      }
+      
+      .interaction path {
+        pointer-events: all;
+        cursor: ns-resize;
+        stroke: blue;
+        stroke-width: 1;
+      }
+
+    </style>
+    <style>
+      .axis path,
+      .axis line {
+        fill: none;
+        stroke: #000;
+        shape-rendering: crispEdges;
+      }
+      
+      text.symbol {
+        fill: #BBBBBB;
+      }
+      
+      path {
+        fill: none;
+        stroke-width: 1;
+      }
+      
+      .close.annotation.up path {
+        fill: #00AA00;
+      }
+      
+      path.volume {
+        fill: #DDDDDD;
+      }
+      
+      .indicator-plot path.line {
+        fill: none;
+        stroke-width: 1;
+      }
+      
+      .ma-0 path.line {
+        stroke: #1f77b4;
+      }
+      
+      .ma-1 path.line {
+        stroke: #aec7e8;
+      }
+      
+      .ma-2 path.line {
+        stroke: #ff7f0e;
+      }
+      
+      button {
+        position: absolute;
+        right: 110px;
+        top: 25px;
+      }
+      
+      path.macd {
+        stroke: #0000AA;
+      }
+      
+      path.signal {
+        stroke: #FF9999;
+      }
+      
+      path.zero {
+        stroke: #BBBBBB;
+        stroke-dasharray: 0;
+        stroke-opacity: 0.5;
+      }
+      
+      path.difference {
+        fill: #BBBBBB;
+        opacity: 0.5;
+      }
+      
+      path.rsi {
+        stroke: #000000;
+      }
+      
+      path.overbought,
+      path.oversold {
+        stroke: #FF9999;
+        stroke-dasharray: 5, 5;
+      }
+      
+      path.middle,
+      path.zero {
+        stroke: #BBBBBB;
+        stroke-dasharray: 5, 5;
+      }
+      
+      .analysis path,
+      .analysis circle {
+        stroke: blue;
+        stroke-width: 0.8;
+      }
+      
+      .trendline circle {
+        stroke-width: 0;
+        display: none;
+      }
+      
+      .mouseover .trendline path {
+        stroke-width: 1.2;
+      }
+      
+      .mouseover .trendline circle {
+        stroke-width: 1;
+        display: inline;
+      }
+      
+      .dragging .trendline path,
+      .dragging .trendline circle {
+        stroke: darkblue;
+      }
+      
+      .interaction path,
+      .interaction circle {
+        pointer-events: all;
+      }
+      
+      .interaction .body {
+        cursor: move;
+      }
+      
+      .trendlines .interaction .start,
+      .trendlines .interaction .end {
+        cursor: nwse-resize;
+      }
+      
+      .crosshair {
+        cursor: crosshair;
+      }
+      
+      .crosshair path.wire {
+        stroke: #DDDDDD;
+        stroke-dasharray: 1, 1;
+      }
+      
+      .crosshair .axisannotation path {
+        fill: #DDDDDD;
+      }
+      
+      .tradearrow path.tradearrow {
+        stroke: none;
+      }
+      
+    </style>
+  </head>
+<script>
+var ajax = {};
+ajax.x = function() {
+    if (typeof XMLHttpRequest !== 'undefined') {
+        return new XMLHttpRequest();  
+    }
+    var versions = [
+        "MSXML2.XmlHttp.6.0",
+        "MSXML2.XmlHttp.5.0",   
+        "MSXML2.XmlHttp.4.0",  
+        "MSXML2.XmlHttp.3.0",   
+        "MSXML2.XmlHttp.2.0",  
+        "Microsoft.XmlHttp"
+    ];
+
+    var xhr;
+    for(var i = 0; i < versions.length; i++) {  
+        try {  
+            xhr = new ActiveXObject(versions[i]);  
+            break;  
+        } catch (e) {
+        }  
+    }
+    return xhr;
+};
+
+ajax.send = function(url, callback, method, data, sync) {
+    var x = ajax.x();
+    x.open(method, url, sync);
+    x.onreadystatechange = function() {
+        if (x.readyState == 4) {
+            callback(x.responseText)
+        }
+    };
+    if (method == 'POST') {
+        x.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    }
+    x.send(data)
+};
+
+ajax.get = function(url, data, callback, sync) {
+    var query = [];
+    for (var key in data) {
+        query.push(encodeURIComponent(key) + '=' + encodeURIComponent(data[key]));
+    }
+    ajax.send(url + (query.length ? '?' + query.join('&') : ''), callback, 'GET', null, sync)
+};
+
+ajax.post = function(url, data, callback, sync) {
+    var query = [];
+    for (var key in data) {
+        query.push(encodeURIComponent(key) + '=' + encodeURIComponent(data[key]));
+    }
+    ajax.send(url, callback, 'POST', query.join('&'), sync)
+};
+</script>
+
+  <body  class="layout-white">
+    <!-- Status bar overlay for fullscreen mode-->
+    <div class="statusbar-overlay"></div>
+    <!-- Panels overlay-->
+    <div class="panel-overlay"></div>
+    <!-- Left panel with reveal effect-->
+    <div class="panel panel-left panel-reveal">
+      <div class="navbar">
+        <div class="navbar-inner">
+          <div class="left"></div>
+          <div class="center sliding">MENU</div>
+          <div class="right"></div>
+        </div>
+      </div>
+      <div class="content-block">
+        <div class="list-block">
+          <ul>
+            <li>
+              <a href="#" onclick="tour.start();" class="item-link close-panel">
+                <div class="item-content">
+                  <div class="item-inner">
+                    <div class="item-title">How To Play</div>
+                  </div>
+                </div>
+              </a>
+            </li>
+            <li>
+              <a href="#earn" class="item-link close-panel">
+                <div class="item-content">
+                  <div class="item-inner">
+                    <div class="item-title">Earn Money</div>
+                  </div>
+                </div>
+              </a>
+            </li>
+            <!--<li>
+              <a href="#multi" class="item-link close-panel">
+                <div class="item-content">
+                  <div class="item-inner">
+                    <div class="item-title">Multi Player</div>
+                  </div>
+                </div>
+              </a>
+            </li>-->
+            <li>
+              <a href="#technicals" class="item-link close-panel">
+                <div class="item-content">
+                  <div class="item-inner">
+                    <div class="item-title">Technicals</div>
+                  </div>
+                </div>
+              </a>
+            </li>
+            <li>
+              <a href="#profile" class="item-link close-panel">
+                <div class="item-content">
+                  <div class="item-inner">
+                    <div class="item-title">Account</div>
+                  </div>
+                </div>
+              </a>
+            </li>
+            <li>
+              <a href="#profile" class="item-link close-panel">
+                <div class="item-content">
+                  <div class="item-inner">
+                    <div class="item-title">FAQ</div>
+                  </div>
+                </div>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- Right panel with cover effect-->
+    <div class="panel panel-right panel-cover">
+      <div class="content-block">
+        <p>Right panel content goes here</p>
+      </div>
+    </div>
+    <!-- Views-->
+    <div class="views">
+      <!-- Your main view, should have "view-main" class-->
+      <div class="view view-main">
+        <!-- Top Navbar-->
+        <div class="navbar">
+          <!-- Navbar inner for Index page-->
+          <div data-page="index" class="navbar-inner">
+            <!-- We have home navbar without left link-->
+            <div class="left">
+              <a href="#" class="link icon-only open-panel"> <i class="icon icon-bars"></i></a>
+            </div>
+            <div class="center sliding"><img src="tools/./422.gif" width="50"></img>
+            </div>
+            <div class="right">
+              <p class="buttons-row" style="width:auto;">
+                <a href="#" class="button" style="width:55px;font-size:11px !important;margin-right:0px;" onclick="">1.8</a>
+                <a href="#" class="button" style="width:55px;font-size:11px !important;margin-left:0;" onclick="nextChart();">Skip</a>
+                <a href="#" class="button" style="width:55px;margin-left:0;font-size:11px !important;" onclick="tour.start();">Help</a>
+                <a href="#" class="button" onclick="(this.innerHTML=='Submit')?submit():nextChart();" id="submitChart" style="width:55px;margin-left:0;font-size:11px !important;">Submit</a>
+              </p>
+            </div>
+          </div>
+          <!-- Navbar inner for About page-->
+          <div data-page="about" class="navbar-inner cached">
+            <div class="left sliding">
+              <a href="#" class="back link"> <i class="icon icon-back"></i><span>Back</span></a>
+            </div>
+            <div class="center sliding">How to play</div>
+          </div>
+          <!-- Navbar inner for Services page-->
+          <div data-page="earn" class="navbar-inner cached">
+            <div class="left sliding">
+              <a href="#" class="back link"> <i class="icon icon-back"></i><span>Back</span></a>
+            </div>
+            <div class="center sliding">Earn Money</div>
+          </div>
+          <!-- Navbar inner for Form page-->
+          <div data-page="multi" class="navbar-inner cached">
+            <div class="left sliding">
+              <a href="#" class="back link"> <i class="icon icon-back"></i><span>Back</span></a>
+            </div>
+            <div class="center sliding">MultiPlayer</div>
+          </div>
+          <!-- Navbar inner for Form page-->
+          <div data-page="technicals" class="navbar-inner cached">
+            <div class="left sliding">
+              <a href="#" class="back link" onclick="javascript:toDraw();"> <i class="icon icon-back"></i><span>Back</span></a>
+            </div>
+            <div class="center sliding">Technicals</div>
+          </div>
+          <!-- Navbar inner for Form page-->
+          <div data-page="technicals2" class="navbar-inner cached">
+            <div class="left sliding">
+              <a href="#" class="back link"> <i class="icon icon-back"></i><span>Back</span></a>
+            </div>
+            <div class="center sliding">Choose Indicators</div>
+          </div>
+          <!-- Navbar inner for Form page-->
+          <div data-page="profile" class="navbar-inner cached">
+            <div class="left sliding">
+              <a href="#" class="back link"> <i class="icon icon-back"></i><span>Back</span></a>
+            </div>
+            <div class="center sliding">Account</div>
+          </div>
+        </div>
+        <!-- Pages, because we need fixed-through navbar and toolbar, it has additional appropriate classes-->
+        <div class="pages navbar-through toolbar-through">
+          <!-- Index Page-->
+          <div data-page="index" class="page">
+            <!-- Scrollable page content-->
+            <div class="page-content" style="padding-bottom:0;">
+              <div id="bigChart"></div>
+            </div>
+          </div>
+          <!-- About Page-->
+          <div data-page="about" class="page cached">
+            <div class="page-content">
+              <div class="content-block">
+                <p>You may go <a href="#" class="back">back</a> or load <a href="#services">Services</a> page.</p>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vel commodo massa, eu adipiscing mi. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Phasellus ultricies dictum neque, non varius
+                  tortor fermentum at. Curabitur auctor cursus imperdiet. Nam molestie nisi nec est lacinia volutpat in a purus. Maecenas consectetur condimentum viverra. Donec ultricies nec sem vel condimentum. Phasellus eu tincidunt enim, sit amet convallis
+                  orci. Vestibulum quis fringilla dolor. </p>
+                <p>Mauris commodo lacus at nisl lacinia, nec facilisis erat rhoncus. Sed eget pharetra nunc. Aenean vitae vehicula massa, sed sagittis ante. Quisque luctus nec velit dictum convallis. Nulla facilisi. Ut sed erat nisi. Donec non dolor massa.
+                  Mauris malesuada dolor velit, in suscipit leo consectetur vitae. Duis tempus ligula non eros pretium condimentum. Cras sed dolor odio.</p>
+                <p>Suspendisse commodo adipiscing urna, a aliquet sem egestas in. Sed tincidunt dui a magna facilisis bibendum. Nunc euismod consectetur lorem vitae molestie. Proin mattis tellus libero, non hendrerit neque eleifend ac. Pellentesque interdum
+                  velit at lacus consectetur scelerisque et id dui. Praesent non fringilla dui, a elementum purus. Proin vitae lacus libero. Nunc eget lectus non mi iaculis interdum vel a velit. Nullam tincidunt purus id lacus ornare, at elementum turpis
+                  euismod. Cras mauris enim, congue eu nisl sit amet, pulvinar semper erat. Suspendisse sed mauris diam.</p>
+                <p>Nam eu mauris leo. Pellentesque aliquam vehicula est, sed lobortis tellus malesuada facilisis. Fusce at hendrerit ligula. Donec eu nibh convallis, pulvinar enim quis, lacinia diam. Ut semper ac magna nec ornare. Integer placerat justo
+                  sed nunc suscipit facilisis. Vestibulum ac tincidunt augue. Duis eu aliquet mauris, vel luctus mauris. Nulla non augue nec diam pharetra posuere at in mauris.</p>
+              </div>
+            </div>
+          </div>
+          <!-- Earn Page-->
+          <div data-page="earn" class="page cached">
+            <div class="page-content">
+              <div class="content-block-title">Play well and earn money</div>
+              <div class="content-block">
+                <div class="content-block-inner">
+                  <p>Every week the best performing players will get money in their account. The best performers who have played minimum number of games will be selected.<a href="#technicals">Click here</a> to know more about how we choose the players.</p>
+                </div>
+              </div>
+              <div class="content-block-title">No Risk</div>
+              <div class="content-block">
+                <div class="content-block-inner">
+                  <p>You will not need to put any money from your side, only play the game. The money earned from our branding, industry tie-ups advertisements will be routed back to you. We do not retain profit and distribute all our earnings back to you.
+                    <a href="#" data-panel="right" class="open-panel">Click here</a> to know more about how we make the money.</p>
+                </div>
+              </div>
+              <div class="content-block-title">Not a lottery</div>
+              <div class="content-block">
+                <div class="content-block-inner">
+                  <p>We are not a lottery system. Rather it is only the best talented traders who would end up raking th emoolah. Think of us as a company that distributes X amount of money to all the players, and asks them to trade on that amount. The ones
+                    who lose that money trading get nothing, whereas the ones who make are able to preserve and make more money get that amount in their account. <a href="#" data-panel="right" class="open-panel">Click here</a> to know whether trading
+                    skills exist?</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Technicals Page-->
+          <div data-page="technicals" class="page cached">
+            <div class="page-content">
+              <div class="content-block">
+                <div class="content-block-inner">
+                  <p>Technical Analysis is an advanced analysis of charts. Since technical analysis is derived from the chat price movement, there is no additional information that technical indicators provide over the price chart. What the indicators do
+                    provide is a different methods of illustrating the underlying chart.</p>
+                  <p> We are not sure whether technical indicators provide better methods of prediction, however if you feel that technicals help you - then please go ahead.<a href="#technicals2">Click here</a> to know more about</p>
+                  <!-- Switch (Checkbox) -->
+                  <div class="list-block">
+                    <ul>
+                      <li>
+                        <a href="#" class="item-link smart-select">
+                          <!-- "multiple" attribute for multiple select-->
+                          <select id="indicators" name="indicators" multiple>
+                            <!-- options grouped within "optgroup" tag-->
+                            <optgroup label="Leading indicators">
+                              <option value="macd" id="macd">MACD</option>
+                              <option value="rsi" id="rsi" disabled>RSI</option>
+                              <option value="ichimoku" id="ichimoku" disabled>Ichimoku</option>
+                            </optgroup>
+                            <optgroup label="Lagging indicators">
+                              <option value="sma" id="sma">Simple Moving Averages</option>
+                              <option value="ema" id="ema">Exponential Moving Averages</option>
+                            </optgroup>
+                            <optgroup label="Other indicators">
+                              <option value="trend" id="trend">Trend Lines</option>
+                              <option value="support" id="support" disabled>Supports and Resistances</option>
+                            </optgroup>
+                          </select>
+                          <div class="item-content">
+                            <div class="item-inner">
+                              <div class="item-title">Technical Indicators</div>
+                            </div>
+                          </div>
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Form Page-->
+        </div>
+      </div>
+    </div>
+    <script>
+		showResults=false;
+		feed2='';
+		countChartsDone=0;
+		scoreChartsDone=0;
+      dataCutOff = 180;
+      dim = {
+        width: window.innerWidth,
+        height: window.innerHeight - 50,
+        margin: {
+          top: 10,
+          right: 10,
+          bottom: 30,
+          left: 10
+        },
+        ohlc: {
+          height: 305
+        },
+        indicator: {
+          height: 0,
+          padding: 5
+        }
+      };
+      isIndicator = {
+        isSMA: false,
+        isMACD: false,
+        isRSI: false,
+        isEMA: false,
+        isIchimoku: false,
+        isTrendline: false,
+        isVolume: false
+      }
+
+      function toDraw() {
+        var dirty = false;
+        if (isIndicator.isSMA != document.getElementById('sma').selected) {
+          isIndicator.isSMA = document.getElementById('sma').selected;
+          dirty = true;
+        }
+        if (isIndicator.isEMA != document.getElementById('ema').selected) {
+          isIndicator.isEMA = document.getElementById('ema').selected;
+          dirty = true;
+        }
+        if (isIndicator.isTrendline != document.getElementById('trend').selected) {
+          isIndicator.isTrendline = document.getElementById('trend').selected;
+          dirty = true;
+        }
+        if (isIndicator.isIchimoku != document.getElementById('ichimoku').selected) {
+          isIndicator.isIchimoku = document.getElementById('ichimoku').selected;
+          dirty = true;
+        }
+        if (isIndicator.isMACD != document.getElementById('macd').selected) {
+          isIndicator.isMACD = document.getElementById('macd').selected;
+          dirty = true;
+        }
+        if (isIndicator.isRSI != document.getElementById('rsi').selected) {
+          isIndicator.isRSI = document.getElementById('rsi').selected;
+          dirty = true;
+        }
+        if (dirty) initChart(false);
+      }
+      initChart(true);
+
+      function initChart(getDataFlag) {
+        document.getElementById("bigChart").innerHTML = "";
+
+        if (isIndicator.isMACD) {
+          dim.ohlc.height = dim.height * 0.7;
+          dim.indicator.height = dim.height * 0.3;
+        } else {
+          dim.ohlc.height = dim.height;
+          dim.indicator.height = 0;
+        }
+        dim.plot = {
+          width: dim.width - dim.margin.left - dim.margin.right,
+          height: dim.height - dim.margin.top - dim.margin.bottom
+        };
+        dim.indicator.top = dim.ohlc.height + dim.indicator.padding;
+        dim.indicator.bottom = dim.indicator.top + dim.indicator.height + dim.indicator.padding;
+
+        indicatorTop = d3.scale.linear()
+          .range([dim.indicator.top, dim.indicator.bottom]);
+
+        parseDate = d3.time.format("%d-%b-%y").parse;
+
+        zoom = d3.behavior.zoom()
+          .on("zoom", draw, true);
+
+        zoomPercent = d3.behavior.zoom();
+
+        x = techan.scale.financetime()
+          .range([0, dim.plot.width]);
+
+        y = d3.scale.linear()
+          .range([dim.ohlc.height, 0]);
+
+        yPercent = y.copy(); // Same as y at this stage, will get a different domain later
+        if (isIndicator.isVolume) {
+          yVolume = d3.scale.linear()
+            .range([y(0), y(0.2)]);
+        }
+        candlestick = techan.plot.candlestick()
+          .xScale(x)
+          .yScale(y);
+
+        tradearrow = techan.plot.tradearrow()
+          .xScale(x)
+          .yScale(y)
+          .y(function(d) {
+            // Display the buy and sell arrows a bit above and below the price, so the price is still visible
+            if (d.type === 'buy') return y(d.low) + 5;
+            if (d.type === 'sell') return y(d.high) - 5;
+            else return y(d.price);
+          });
+        if (isIndicator.isSMA) {
+          sma0 = techan.plot.sma()
+            .xScale(x)
+            .yScale(y);
+
+          sma1 = techan.plot.sma()
+            .xScale(x)
+            .yScale(y);
+        }
+        if (isIndicator.isEMA) {
+          ema2 = techan.plot.ema()
+            .xScale(x)
+            .yScale(y);
+        }
+        if (isIndicator.isVolume) {
+          volume = techan.plot.volume()
+            .accessor(candlestick.accessor()) // Set the accessor to a ohlc accessor so we get highlighted bars
+            .xScale(x)
+            .yScale(yVolume);
+        }
+        if (isIndicator.isTrendline) {
+          trendline = techan.plot.trendline()
+            .xScale(x)
+            .yScale(y);
+        }
+        supstance = techan.plot.supstance()
+          .xScale(x)
+          .yScale(y)
+          .on("mouseenter", enter)
+          .on("mouseout", out)
+          .on("drag", drag);;
+
+        xAxis = d3.svg.axis()
+          .scale(x)
+          .orient("bottom");
+
+        timeAnnotation = techan.plot.axisannotation()
+          .axis(xAxis)
+          .format(d3.format(',x'))
+          .width(65)
+          .translate([0, dim.plot.height]);
+
+        yAxis = d3.svg.axis()
+          .scale(y)
+          .orient("right");
+
+        ohlcAnnotation = techan.plot.axisannotation()
+          .axis(yAxis)
+          .format(d3.format(',.2fs'))
+          .translate([x(1), 0]);
+        percentAxis = d3.svg.axis()
+          .scale(yPercent)
+          .orient("left")
+          .tickFormat(d3.format('.1f'));
+
+        percentAnnotation = techan.plot.axisannotation()
+          .axis(percentAxis);
+
+        closeAnnotation = techan.plot.axisannotation()
+          .axis(percentAxis)
+          .accessor(candlestick.accessor())
+          .format(d3.format(',.2fs'))
+          .translate([x(1), 0]);
+
+        if (isIndicator.isVolume) {
+          volumeAxis = d3.svg.axis()
+            .scale(yVolume)
+            .orient("right")
+            .ticks(3)
+            .tickFormat(d3.format(",.3s"));
+
+          volumeAnnotation = techan.plot.axisannotation()
+            .axis(volumeAxis)
+            .width(35);
+        }
+        if (isIndicator.isMACD) {
+          macdScale = d3.scale.linear()
+            .range([indicatorTop(0) + dim.indicator.height, indicatorTop(0)]);
+        }
+        if (isIndicator.isRSI) {
+          rsiScale = macdScale.copy()
+            .range([indicatorTop(1) + dim.indicator.height, indicatorTop(1)]);
+        }
+        if (isIndicator.isMACD) {
+          macd = techan.plot.macd()
+            .xScale(x)
+            .yScale(macdScale);
+
+          macdAxis = d3.svg.axis()
+            .scale(macdScale)
+            .ticks(3)
+            .orient("right");
+
+          macdAnnotation = techan.plot.axisannotation()
+            .axis(macdAxis)
+            .format(d3.format(',.2fs'))
+            .translate([x(1), 0]);
+
+          macdAxisLeft = d3.svg.axis()
+            .scale(macdScale)
+            .ticks(3)
+            .orient("left");
+
+          macdAnnotationLeft = techan.plot.axisannotation()
+            .axis(macdAxisLeft)
+            .format(d3.format(',.2fs'));
+        }
+        if (isIndicator.isRSI) {
+          rsi = techan.plot.rsi()
+            .xScale(x)
+            .yScale(rsiScale);
+
+          rsiAxis = d3.svg.axis()
+            .scale(rsiScale)
+            .ticks(3)
+            .orient("right");
+
+          rsiAnnotation = techan.plot.axisannotation()
+            .axis(rsiAxis)
+            .format(d3.format(',.2fs'))
+            .translate([x(1), 0]);
+
+          rsiAxisLeft = d3.svg.axis()
+            .scale(rsiScale)
+            .ticks(3)
+            .orient("left");
+
+          rsiAnnotationLeft = techan.plot.axisannotation()
+            .axis(rsiAxisLeft)
+            .format(d3.format(',.2fs'));
+        }
+        ohlcCrosshair = techan.plot.crosshair()
+          .xScale(timeAnnotation.axis().scale())
+          .yScale(ohlcAnnotation.axis().scale())
+          //          .xAnnotation(timeAnnotation)
+          //           .yAnnotation([ohlcAnnotation, percentAnnotation, volumeAnnotation])
+          .verticalWireRange([0, dim.plot.height]);
+        if (isIndicator.isMACD) {
+          macdCrosshair = techan.plot.crosshair()
+            .xScale(timeAnnotation.axis().scale())
+            .yScale(macdAnnotation.axis().scale())
+            .xAnnotation(timeAnnotation)
+            .yAnnotation([macdAnnotation, macdAnnotationLeft])
+            .verticalWireRange([0, dim.plot.height]);
+        }
+        if (isIndicator.isRSI) {
+          rsiCrosshair = techan.plot.crosshair()
+            .xScale(timeAnnotation.axis().scale())
+            .yScale(rsiAnnotation.axis().scale())
+            .xAnnotation(timeAnnotation)
+            .yAnnotation([rsiAnnotation, rsiAnnotationLeft])
+            .verticalWireRange([0, dim.plot.height]);
+        }
+        svg = d3.select("#bigChart").append("svg")
+          .attr("width", dim.width)
+          .attr("height", dim.height);
+
+        defs = svg.append("defs");
+
+        defs.append("clipPath")
+          .attr("id", "ohlcClip")
+          .append("rect")
+          .attr("x", 0)
+          .attr("y", 0)
+          .attr("width", dim.plot.width)
+          .attr("height", dim.ohlc.height);
+
+
+        defs.selectAll("indicatorClip").data([0, 1])
+          .enter()
+          .append("clipPath")
+          .attr("id", function(d, i) {
+            return "indicatorClip-" + i;
+          })
+          .append("rect")
+          .attr("x", 0)
+          .attr("y", function(d, i) {
+            return indicatorTop(i);
+          })
+          .attr("width", dim.plot.width)
+          .attr("height", dim.indicator.height);
+        svg = svg.append("g")
+          .attr("transform", "translate(" + dim.margin.left + "," + dim.margin.top + ")");
+
+        svg.append("g")
+          .attr("class", "x axis")
+          .attr("transform", "translate(0," + dim.plot.height + ")");
+
+        ohlcSelection = svg.append("g")
+          .attr("class", "ohlc")
+          .attr("transform", "translate(0,0)");
+
+        ohlcSelection.append("g")
+          .attr("class", "axis")
+          .attr("transform", "translate(" + x(1) + ",0)")
+          .append("text")
+          .attr("transform", "rotate(-90)")
+          .attr("y", -12)
+          .attr("dy", ".71em");
+        //      .style("text-anchor", "end");
+        //      .text("Price ($)");
+
+        ohlcSelection.append("g")
+          .attr("class", "close annotation up");
+        if (isIndicator.isVolume) {
+          ohlcSelection.append("g")
+            .attr("class", "volume")
+            .attr("clip-path", "url(#ohlcClip)");
+        }
+        ohlcSelection.append("g")
+          .attr("class", "candlestick")
+          .attr("clip-path", "url(#ohlcClip)");
+        if (isIndicator.isSMA) {
+          ohlcSelection.append("g")
+            .attr("class", "indicator sma ma-0")
+            .attr("clip-path", "url(#ohlcClip)");
+
+          ohlcSelection.append("g")
+            .attr("class", "indicator sma ma-1")
+            .attr("clip-path", "url(#ohlcClip)");
+        }
+        if (isIndicator.isEMA) {
+          ohlcSelection.append("g")
+            .attr("class", "indicator ema ma-2")
+            .attr("clip-path", "url(#ohlcClip)");
+        }
+        ohlcSelection.append("g")
+          .attr("class", "percent axis");
+        if (isIndicator.isVolume) {
+          ohlcSelection.append("g")
+            .attr("class", "volume axis");
+        }
+        indicatorSelection = svg.selectAll("svg > g.indicator").data(["macd", "rsi"]).enter()
+          .append("g")
+          .attr("class", function(d) {
+            return d + " indicator";
+          });
+
+        indicatorSelection.append("g")
+          .attr("class", "axis right")
+          .attr("transform", "translate(" + x(1) + ",0)");
+
+        indicatorSelection.append("g")
+          .attr("class", "axis left")
+          .attr("transform", "translate(" + x(0) + ",0)");
+
+        indicatorSelection.append("g")
+          .attr("class", "indicator-plot")
+          .attr("clip-path", function(d, i) {
+            return "url(#indicatorClip-" + i + ")";
+          });
+
+        // Add trendlines and other interactions last to be above zoom pane
+        svg.append('g')
+          .attr("class", "crosshair ohlc");
+
+        svg.append("g")
+          .attr("class", "tradearrow")
+          .attr("clip-path", "url(#ohlcClip)");
+
+        if (isIndicator.isMACD) {
+          svg.append('g')
+            .attr("class", "crosshair macd");
+        }
+        if (isIndicator.isRSI) {
+          svg.append('g')
+            .attr("class", "crosshair rsi");
+        }
+        svg.append("g")
+          .attr("class", "trendlines analysis")
+          .attr("clip-path", "url(#ohlcClip)");
+        /*   svg.append("g")
+            .attr("class", "supstances analysis")
+            .attr("clip-path", "url(#ohlcClip)");
+*/
+        svg.append("g")
+          .attr("class", "supstance1")
+          .attr("clip-path", "url(#ohlcClip)");
+
+        svg.append("g")
+          .attr("class", "supstance2")
+          .attr("clip-path", "url(#ohlcClip)");
+
+        d3.select("button").on("click", reset);
+        //https://docs.google.com/spreadsheets/d/1I08E9v0DB3VKNngldmGA7yPayym93ZIJXAwSRxZPPbM/pub?output=csv
+        //https://docs.google.com/spreadsheets/d/1THHUKTKJBOCoNgBJdrzyESjv7xY3XC7zYRJIpofXgXQ/pub?output=csv
+        //https://docs.google.com/spreadsheets/d/1Die0s4eGEIkpPa1APVeR0lufmC4hBd0tfd1d1Auc4hA/pub?output=csv
+		//https://docs.google.com/spreadsheets/d/13P3whtLKqIyZGHTHt7XOHw2Nw57IwkKpwT9qC5Z3WwY/pub?output=csv
+        var csvFile = ['./stockData/ju0.csv',
+          './stockData/ju1.csv',
+          './stockData/ju2.csv',          
+		  './stockData/ju3.csv'
+        ][Math.floor(Math.random() * 4)];
+		//csvFile='https://docs.google.com/spreadsheets/d/13P3whtLKqIyZGHTHt7XOHw2Nw57IwkKpwT9qC5Z3WwY/pub?output=csv';
+		csvFile='http://idlydo.com/stockData/getfile.php';
+        console.log(csvFile)
+        if (getDataFlag) { //load new chart???
+			if(feed2.length>dataCutOff+70) {
+				//feed3=feed2;
+				//feed2=feed3.splice(0, dataCutOff);
+				afterCSV(feed2);
+			} 
+			else {
+				var tdata=""
+			  d3.csv(csvFile, function(error, feed) {
+				accessor = candlestick.accessor();
+				indicatorPreRoll = 33; // Don't show where indicators don't have data
+				if (isIndicator.isVolume) {
+				  feed = feed.map(function(d) {
+					return {
+					  date: parseDate(d.Date),
+					  open: +d.Open,
+					  high: +d.High,
+					  low: +d.Low,
+					  close: +d.Close,
+					  volume: +d.Volume
+					};
+				  }).sort(function(a, b) {
+					return d3.ascending(accessor.d(a), accessor.d(b));
+				  });
+				} else {
+				  feed = feed.map(function(d) {
+					return {
+					  date: parseDate(d.Date),
+					  open: +d.Open,
+					  high: +d.High,
+					  low: +d.Low,
+					  close: +d.Close
+					};
+				  }).sort(function(a, b) {
+					return d3.ascending(accessor.d(a), accessor.d(b));
+				  });
+				}
+				afterCSV(feed);
+				if (countChartsDone>0) {
+					//alert(scoreChartsDone/countChartsDone );
+					countChartsDone=0;
+				 ajax.post('http://idlydo.com/testajax.php', {foo: 'bar'}, function(responseText) {});
+				}
+			  });
+			  //getNewCSVFile=false;
+		  }
+        } 
+		else {
+          afterCSV(feed2)
+        }
+      }
+	function afterCSV(feedAll) {
+        if (showResults==false) {
+          feed2 = feedAll;
+          data = feed2.splice(0, dataCutOff);
+		  //if (feed2.length<(dataCutOff+70)*3) getNewCSVFile=true;
+          feedHigh = feed2.map(function(elt) {
+            return elt.open;
+          });
+          feedLow = feed2.map(function(elt) {
+            return elt.low;
+          });
+          var randTPSL1 = data[Math.floor(Math.random() * (data.length - indicatorPreRoll)) + indicatorPreRoll];
+          var randTPSL2 = data[Math.floor(Math.random() * (data.length - indicatorPreRoll)) + indicatorPreRoll];
+          supstanceData1 = [{
+            start: randTPSL1.date,
+            end: randTPSL2.date,
+            value: randTPSL1.close,
+            class: 'TP'
+          }];
+          supstanceData2 = [{
+            start: randTPSL1.date,
+            end: randTPSL2.date,
+            value: randTPSL2.close,
+            class: 'SL'
+          }];
+        } else {
+
+        }
+        if (isIndicator.isTrendline) {
+          trendlineData = [{
+            start: {
+              date: new Date(2014, 2, 11),
+              value: 72.50
+            },
+            end: {
+              date: new Date(2014, 5, 9),
+              value: 63.34
+            }
+          }, {
+            start: {
+              date: new Date(2013, 10, 21),
+              value: 43
+            },
+            end: {
+              date: new Date(2014, 2, 17),
+              value: 70.50
+            }
+          }];
+        }
+        x.domain(techan.scale.plot.time(data).domain());
+        y.domain(techan.scale.plot.ohlc(data.slice(indicatorPreRoll)).domain());
+        yPercent.domain(techan.scale.plot.percent(y, accessor(data[indicatorPreRoll])).domain());
+        if (isIndicator.isVolume) {
+          yVolume.domain(techan.scale.plot.volume(data).domain());
+        }
+        if (isIndicator.isSMA) {
+          svg.select("g.sma.ma-0").datum(techan.indicator.sma().period(10)(data));
+          svg.select("g.sma.ma-1").datum(techan.indicator.sma().period(20)(data));
+        }
+        if (isIndicator.isEMA) {
+          svg.select("g.ema.ma-2").datum(techan.indicator.ema().period(50)(data));
+        }
+        draw(false);
+        // Associate the zoom with the scale after a domain has been applied
+        zoom.x(zoomable).y(y);
+        zoomPercent.y(yPercent);
+      }
+
+      function reset() {
+        zoom.scale(1);
+        zoom.translate([0, 0]);
+        draw(false);
+      }
+
+      function draw(isZoom) {
+        if (!isZoom) {
+          if (isIndicator.isMACD) {
+            var macdData = techan.indicator.macd()(data);
+            macdScale.domain(techan.scale.plot.macd(macdData).domain());
+          }
+          if (isIndicator.isRSI) {
+            var rsiData = techan.indicator.rsi()(data);
+            rsiScale.domain(techan.scale.plot.rsi(rsiData).domain());
+          }
+          if (data.length > dataCutOff) {
+            x.domain(techan.scale.plot.time(data).domain());
+            yMax = Math.max(techan.scale.plot.ohlc(data.slice(indicatorPreRoll)).domain()[0], techan.scale.plot.ohlc(data.slice(indicatorPreRoll)).domain()[1], supstanceData1[0].value, supstanceData2[0].value);
+            yMin = Math.min(techan.scale.plot.ohlc(data.slice(indicatorPreRoll)).domain()[0], techan.scale.plot.ohlc(data.slice(indicatorPreRoll)).domain()[1], supstanceData1[0].value, supstanceData2[0].value);
+            y.domain([yMin, yMax]);
+            yPercent.domain(techan.scale.plot.percent(y, accessor(data[indicatorPreRoll])).domain());
+            if (isIndicator.isVolume) {
+              yVolume.domain(techan.scale.plot.volume(data).domain());
+            }
+          }
+          svg.select("g.candlestick").datum(data).call(candlestick);
+          svg.select("g.close.annotation").datum([data[data.length - 1]]).call(closeAnnotation);
+          if (isIndicator.isVolume) {
+            svg.select("g.volume").datum(data).call(volume);
+          }
+          if (isIndicator.isSMA) {
+            refreshIndicator(svg.select("g.sma.ma-0"), sma0, techan.indicator.sma().period(10)(data));
+            refreshIndicator(svg.select("g.sma.ma-1"), sma1, techan.indicator.sma().period(20)(data));
+          }
+          if (isIndicator.isEMA) {
+            refreshIndicator(svg.select("g.ema.ma-2"), sma1, techan.indicator.ema().period(20)(data));
+          }
+          if (isIndicator.isMACD) {
+            svg.select("g.macd .indicator-plot").datum(macdData).call(macd);
+          }
+          if (isIndicator.isRSI) {
+            svg.select("g.rsi .indicator-plot").datum(rsiData).call(rsi);
+          }
+          if (isIndicator.isMACD) {
+            svg.select("g.crosshair.macd").call(macdCrosshair).call(zoom);
+          }
+          if (isIndicator.isRSI) {
+            svg.select("g.crosshair.rsi").call(rsiCrosshair).call(zoom);
+          }
+          if (isIndicator.isTrendline) {
+            svg.select("g.trendlines").datum(trendlineData).call(trendline).call(trendline.drag);
+          }
+          svg.select("g.crosshair.ohlc").call(ohlcCrosshair).call(zoom);
+          //			svg.select("g.supstances").datum(supstanceData).call(supstance).call(supstance.drag);
+          svg.select("g.supstance1").datum(supstanceData1).call(supstance).call(supstance.drag);
+          svg.select("g.supstance2").datum(supstanceData2).call(supstance).call(supstance.drag);
+          //		svg.select("g.tradearrow").datum(trades).call(tradearrow);
+          zoomable = x.zoomable();
+          zoomable.domain([indicatorPreRoll, data.length]); // Zoom in a little to hide indicator preroll  
+          if (data.length > dataCutOff) {
+            svg.append("line")
+              .attr("x1", x(data[dataCutOff].date)) //<<== change your code here
+              .attr("y1", Math.min.apply(Math,feedLow))
+              .attr("x2", x(data[dataCutOff].date)) //<<== and here
+              .attr("y2", Math.max.apply(Math,feedHigh))
+              .style("stroke-width", 10)
+              .style("stroke", "yellow")
+              .style("opacity", "0.2")
+              .style("stroke-dasharray", "0")
+              .style("fill", "none");
+          }
+        }
+        // REMOVE TIME VALUE svg.select("g.x.axis").call(xAxis);
+        // REMOVE AXIS FOR VALUE        svg.select("g.ohlc .axis").call(yAxis);
+        //RREMOVE Y AXIS VALUE svg.select("g.percent.axis").call(percentAxis);
+		if (isIndicator.isVolume) {
+          svg.select("g.volume.axis").call(volumeAxis);
+        }
+        if (isIndicator.isMACD) {
+          svg.select("g.macd .axis.right").call(macdAxis);
+        }
+        if (isIndicator.isRSI) {
+          svg.select("g.rsi .axis.right").call(rsiAxis);
+        }
+        if (isIndicator.isMACD) {
+          svg.select("g.macd .axis.left").call(macdAxisLeft);
+        }
+        if (isIndicator.isRSI) {
+          svg.select("g.rsi .axis.left").call(rsiAxisLeft);
+        }
+        // We know the data does not change, a simple refresh that does not perform data joins will suffice.
+        svg.select("g.candlestick").call(candlestick.refresh);
+        svg.select("g.close.annotation").call(closeAnnotation.refresh);
+        if (isIndicator.isVolume) {
+          svg.select("g.volume").call(volume.refresh);
+        }
+        if (isIndicator.isSMA) {
+          svg.select("g .sma.ma-0").call(sma0.refresh);
+          svg.select("g .sma.ma-1").call(sma1.refresh);
+        }
+        if (isIndicator.isEMA) {
+          svg.select("g .ema.ma-2").call(ema2.refresh);
+        }
+        if (isIndicator.isMACD) {
+          svg.select("g.macd .indicator-plot").call(macd.refresh);
+        }
+        if (isIndicator.isRSI) {
+          svg.select("g.rsi .indicator-plot").call(rsi.refresh);
+        }
+        svg.select("g.crosshair.ohlc").call(ohlcCrosshair.refresh);
+        if (isIndicator.isMACD) {
+          svg.select("g.crosshair.macd").call(macdCrosshair.refresh);
+        }
+        if (isIndicator.isRSI) {
+          svg.select("g.crosshair.rsi").call(rsiCrosshair.refresh);
+        }
+        if (isIndicator.isTrendline) {
+          svg.select("g.trendlines").call(trendline.refresh);
+        }
+        //      svg.select("g.supstances").call(supstance.refresh);
+        svg.select("g.supstance1").call(supstance.refresh);
+        svg.select("g.supstance2").call(supstance.refresh);
+
+        //     svg.select("g.tradearrow").call(tradearrow.refresh);
+      }
+
+      function refreshIndicator(selection, indicator, data) {
+        var datum = selection.datum();
+        // Some trickery to remove old and insert new without changing array reference,
+        // so no need to update __data__ in the DOM
+        datum.splice.apply(datum, [0, datum.length].concat(data));
+        selection.call(indicator);
+      }
+
+      function enter(d) {
+        //valueText.style("display", "inline");
+        //refreshText(d);
+      }
+
+      function out() {
+        //valueText.style("display", "none");
+      }
+
+      function drag(d) {
+        //refreshText(d);
+      }
+
+      function refreshText(d) {
+        //  valueText.text("Value: " + valueFormat(d.value));
+      }
+
+      function isBigEnough(arr, value) {
+        for (var i = 0; i < arr.length; i++) {
+          if (arr[i] >= value) return i;
+        }
+        return 9999;
+      }
+
+      function isSmallEnough(arr, value) {
+        for (var i = 0; i < arr.length; i++) {
+          if (arr[i] <= value) return i;
+        }
+        return 9999;
+      }
+
+      function isExitsOK() {
+        return ((valTP - data[data.length - 1].close) * (valSL - data[data.length - 1].close) <= 0 ? true : false);
+      }
+
+      function totalPL() {
+        signPL = 2;
+        typeHit = "buy";
+        if (valTP > valSL) {
+          indexTP = isBigEnough(feedHigh, valTP);
+          indexSL = isSmallEnough(feedLow, valSL);
+          indexBreach = Math.min(indexTP, indexSL);
+          if (indexBreach < 9999) {
+            if (indexTP < indexSL) {
+              return (valTP - data[data.length - 1].close);
+            } else if (indexSL < indexTP) {
+              typeHit = "sell";
+              return -1 * (data[data.length - 1].close - valSL);
+            }
+            return (0);
+          }
+          return (feed2[feed2.length - 1].close - data[data.length - 1].close)
+        } else {
+          indexTP = isSmallEnough(feedLow, valTP);
+          indexSL = isBigEnough(feedHigh, valSL);
+          indexBreach = Math.min(indexTP, indexSL);
+          if (indexBreach < 9999) {
+            if (indexTP < indexSL) {
+              return -1 * (valTP - data[data.length - 1].close);
+            } else if (indexSL < indexTP) {
+              typeHit = "sell";
+              return (data[data.length - 1].close - valSL);
+            }
+            return (0);
+          }
+          return -1 * (feed2[feed2.length - 1].close - data[data.length - 1].close)
+        }
+      }
+
+      function nextChart() {
+        document.getElementById("submitChart").innerHTML = "Submit";
+        
+		showResults=false;
+		initChart(true);
+      }
+
+      function submit() {
+        if (data.length <= dataCutOff) {
+          valTP = svg.select("g.supstance2")[0][0].__data__[0].value;
+          valSL = svg.select("g.supstance1")[0][0].__data__[0].value;
+          if (isExitsOK()) {
+            performance = (totalPL()) / (techan.scale.plot.ohlc(data).domain()[0] - techan.scale.plot.ohlc(data).domain()[1]) * 100;
+            data = data.concat(feed2.splice(0, 70));
+            draw(false);
+            document.getElementById("submitChart").innerHTML = "Next";
+            trades = [{
+              date: data[indexBreach+dataCutOff-1].date,
+              type: typeHit,
+              price: data[indexBreach+dataCutOff-1].low,
+              low: data[indexBreach+dataCutOff-1].low,
+              high: data[indexBreach+dataCutOff-1].high
+            }];
+            svg.select("g.tradearrow").datum(trades).call(tradearrow);
+            var colorPerf = 'red'
+            if (performance > 0) colorPerf = 'green';
+            app.toast('', '<div style="color:' + colorPerf + ';font-size:0.8em;">' + Math.log(Math.abs(performance)).toFixed(1) * Math.sign(performance) + ' </div>', {}).show(true);
+			showResults=false;
+			countChartsDone++;
+			scoreChartsDone=scoreChartsDone+performance;
+          } else {
+            app.modal({
+              title: 'Error',
+              text: 'Stop Loss & Take Profit lines both cannot be on one side of last price.',
+              buttons: [{
+                text: 'Why?',
+                onClick: function() {
+                  app.popup('.popup-about');
+                }
+              }, {
+                text: 'OK'
+              }]
+            });
+          }
+        }
+      }
+
+      /*function submit ()
+      {
+      	data = data.concat(feed2);
+      	draw(false);
+      }*/
+
+    </script>
+    <div class="popup popup-about">
+      <div class="content-block">
+        <p>About</p>
+        <p>Stop Loss and Take Profit lines need to be in opposite side of the last closing price in the chart i.e. the right most candlestick needs to lie between the Red and the Green line. Since the green line indicates the profit levels and the red line
+          indicates the loss levels at which you exit, one can either make a profit or a loss if the stock moves in a direction. For example, if you buy a stock then it is impossible to make a loss as well as a profit if the price falls. You will make
+          a loss (Red line below candlestick) if the stock falls and profit (green line above candlestick) if the stock rises.</p>
+        <p><a href="#" class="close-popup">Close popup</a></p>
+      </div>
+    </div>
+    <!-- Path to Framework7 Library JS-->
+    <script type="text/javascript" src="tools/Framework7-1.3.5/dist/js/framework7.min.js"></script>
+    <script type="text/javascript" src="tools/Framework7-1.3.5/my-app.js"></script>
+    <script type="text/javascript" src="tools/Framework7-1.3.5/toast.js"></script>
+    <script type="text/javascript" src="tools/Framework7-1.3.5/welcomescreen.js"></script>
+
+    <!-- About popover -->
+    <div class="picker-modal popover-first">
+      <div class="picker-modal-inner">
+        <div class="content-block">
+          The blue chart is a candlestick chart of a stock. The chart shows how the stock has moved in the past 150 periods and you need to predict how it will move in future.
+          <p class="buttons-row theme-pink">
+            <a href="#" class="button" onclick="app.closeModal('.popover-first');">Skip</a>
+            <a href="#" class="button">What's a candlestick?</a>
+            <a href="#" class="button" onclick="app.closeModal('.popover-first');app.pickerModal('.popover-second');">Next</a>
+          </p>
+        </div>
+      </div>
+    </div>
+    <!-- About popover -->
+    <div class="picker-modal popover-second">
+      <div class="picker-modal-inner">
+        <div class="content-block">
+          You have to take a view (trade) in the stock at the last price (left most candle). You can decide to either go long or short by guessing future price movement based upon past price movement. This is known as technical analysis that most traders use in
+          some form or other.
+          <p class="buttons-row theme-pink">
+            <a href="#" class="button" onclick="app.closeModal('.popover-second');">Skip</a>
+            <a href="#" class="button">Technical analysis?</a>
+            <a href="#" class="button" onclick="app.closeModal('.popover-second');app.pickerModal('.popover-third');">Next</a>
+          </p>
+        </div>
+      </div>
+    </div>
+    <!-- About popover -->
+    <div class="picker-modal popover-third">
+      <div class="picker-modal-inner">
+        <div class="content-block">
+          The players who are best at guessing the future price movement relative to others will make score more points.
+          <p class="buttons-row theme-pink">
+            <a href="#" class="button" onclick="app.closeModal('.popover-third');">Skip</a>
+            <a href="#" class="button">It works?</a>
+            <a href="#" class="button" onclick="app.closeModal('.popover-third');app.pickerModal('.popover-fourth');">Next</a>
+          </p>
+        </div>
+      </div>
+    </div>
+    <!-- About popover -->
+    <div class="picker-modal popover-fourth">
+      <div class="picker-modal-inner">
+        <div class="content-block">
+          Drag the green line (Take Profit line) either above or below the last candle depending upon whether you expect the price to go up or down. If the price touches the green line (before touching the red line), you earn points. The points earned will be propotional
+          to how far the green line is from last candle.
+          <p class="buttons-row theme-pink">
+            <a href="#" class="button" onclick="app.closeModal('.popover-fourth');">Skip</a>
+            <a href="#" class="button">Take Profit?</a>
+            <a href="#" class="button" onclick="app.closeModal('.popover-fourth');app.pickerModal('.popover-fifth');">Next</a>
+          </p>
+        </div>
+      </div>
+    </div>
+    <!-- About popover -->
+    <div class="picker-modal popover-fifth">
+      <div class="picker-modal-inner">
+        <div class="content-block">
+          Drag the red line (Stop Loss line) either above or below the last candle opposite to the direction you expect the price to move. If the price touches the red line(before touching the green line), you lose points. The points lost will be propotional to
+          how far the red line is from last candle.
+          <p class="buttons-row theme-pink">
+            <a href="#" class="button" onclick="app.closeModal('.popover-fifth');">Skip</a>
+            <a href="#" class="button">Stop Loss?</a>
+            <a href="#" class="button" onclick="app.closeModal('.popover-fifth');app.pickerModal('.popover-sixth');">Next</a>
+          </p>
+        </div>
+      </div>
+    </div>
+    <!-- About popover -->
+    <div class="picker-modal popover-sixth">
+      <div class="picker-modal-inner">
+        <div class="content-block">
+          Once you decide the Take Profit levels (green line) and stop loss levels (red line) enter "Submit" button submit your trade. After submitting the chart your points will be flashed on screen and you can move to next chart. You can also skip the chart if
+          you dont like to trade the chart.
+          <p class="buttons-row theme-pink">
+            <a href="#" class="button" onclick="app.closeModal('.popover-sixth');">Skip</a>
+            <a href="#" class="button">Points calculation?</a>
+            <a href="#" class="button" onclick="app.closeModal('.popover-sixth');app.pickerModal('.popover-seventh');">Next</a>
+          </p>
+        </div>
+      </div>
+    </div>
+    <!-- About popover -->
+    <div class="picker-modal popover-seventh">
+      <div class="picker-modal-inner">
+        <div class="content-block">
+          If you have any further questions go to our FAQs. You can learn about our philosophy, charts we choose, our views on technical analysis, how we determine scores, where we get money to distribute etc. from our FAQs page.
+          <p class="buttons-row theme-pink">
+            <a href="#" class="button">FAQ?</a>
+            <a href="#" class="button" onclick="app.closeModal('.popover-seventh');">End</a>
+          </p>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Path to your app js-->
+    <script>
+      app = new Framework7();
+      var $$ = Dom7;
+
+      var welcomescreen_slides = [{
+        id: 'slide0',
+        picture: '<div class="tutorialicon">$</div>',
+        text: 'Too good to be true: Earn money without risking anything.'
+      }, {
+        id: 'slide1',
+        picture: '<div class="tutorialicon">✓</div>',
+        text: 'Learn trading and technical analysis'
+      }, {
+        id: 'slide2',
+        picture: '<div class="tutorialicon">☢</div>',
+        text: 'Enjoy your time as you play with others or individually'
+      }, {
+        id: 'slide3',
+        picture: '<div class="tutorialicon">☆</div>',
+        text: 'Share with your friends your accomplishments'
+      }];
+      var options = {
+          'bgcolor': '#0da6ec',
+          'fontcolor': '#fff'
+        }
+        /*var welcomescreen = app.welcomescreen(welcomescreen_slides, options);
+      	welcomescreen.open();	
+      	$$(document).on('click', '.tutorial-close-btn', function () {
+      	  welcomescreen.close();
+      	});	
+      	/*
+*/
+      function showIntro() {
+        app.pickerModal('.popover-first', '.supstance2');
+      }
+
+    </script>
+ <!--   <script>
+      tour = new Shepherd.Tour({
+        defaults: {
+          classes: 'shepherd-theme-default'
+        }
+      });
+
+      tour.addStep('example', {
+        title: 'Objective',
+        text: 'Yuo need to predict the direction of future price movement of the candlestick chart in the background. Depending upon how well you predict the direction, you will get points.',
+        showCancelLink: true,
+        buttons: [{
+          text: 'Back',
+          classes: 'minimal-button leftB',
+          action: tour.back
+        }, {
+          text: 'Whats Candlestick?',
+          classes: 'minimal-button',
+          action: tour.next
+        }, {
+          text: 'Next',
+          classes: 'minimal-button rightB',
+          action: tour.next
+        }]
+      });
+      tour.addStep('example', {
+        title: 'Objective',
+        text: 'At the last price (left most candle) you need to determine if the price will go higher or lower based on your intuitive sense and a little bit of pattern recognition.',
+        showCancelLink: true,
+        buttons: [{
+          text: 'Back',
+          classes: 'minimal-button leftB',
+          action: tour.back
+        }, {
+          text: 'Pattern recognition?',
+          classes: 'minimal-button',
+          action: tour.next
+        }, {
+          text: 'Next',
+          classes: 'minimal-button rightB',
+          action: tour.next
+        }]
+      });
+      tour.addStep('example', {
+        title: 'Take Profit',
+        text: 'Drag the green line (Take Profit line) either above or below the last candle depending upon whether you expect the price to go up or down.',
+        showCancelLink: true,
+        attachTo: '.supstance1',
+        buttons: [{
+          text: 'Back',
+          classes: 'minimal-button leftB',
+          action: tour.back
+        }, {
+          text: 'More about Take Profit?',
+          classes: 'minimal-button',
+          action: tour.next
+        }, {
+          text: 'Next',
+          classes: 'minimal-button rightB',
+          action: tour.next
+        }]
+      });
+      tour.addStep('example', {
+        title: 'Stop Loss',
+        text: 'Drag the red line (Stop Loss line) on the side (either above or below last candle) that you dont expect the price to move to.',
+        showCancelLink: true,
+        attachTo: '.supstance2',
+        buttons: [{
+          text: 'Back',
+          classes: 'minimal-button leftB',
+          action: tour.back
+        }, {
+          text: 'More about Stop Loss?',
+          classes: 'minimal-button',
+          action: tour.next
+        }, {
+          text: 'Next',
+          classes: 'minimal-button rightB',
+          action: tour.next
+        }]
+      });
+      tour.addStep('example', {
+        title: 'Submit trade',
+        text: 'Tap/Click the Submit button after you have decided on the TP or SL levels.',
+        showCancelLink: true,
+        attachTo: '#submitChart',
+        buttons: [{
+          text: 'Back',
+          classes: 'minimal-button leftB',
+          action: tour.back
+        }, {
+          text: 'Next',
+          classes: 'minimal-button',
+          action: tour.next
+        }]
+      });
+      tour.addStep('example', {
+        title: 'Scoring',
+        text: 'If the chart touches the green line before hitting the red line then you get positive points, else you lose points. If the chart does not touch any line you get points depending on the if the last candle ends on the side of Take profit or stop loss line.',
+        showCancelLink: true,
+        buttons: [{
+          text: 'Back',
+          classes: 'minimal-button leftB',
+          action: tour.back
+        }, {
+          text: 'Scoring Methodology?',
+          classes: 'minimal-button',
+          action: tour.next
+        }, {
+          text: 'Next',
+          classes: 'minimal-button rightB',
+          action: tour.next
+        }]
+      });
+      tour.addStep('example', {
+        title: 'FAQ',
+        text: 'If you have any further questions go to our FAQs. You can learn about our philosophy, charts we choose, our views on technical analysis, how we determine scores, where we get money to distribute etc. from our FAQs page.',
+        showCancelLink: true,
+        buttons: [{
+          text: 'Back',
+          classes: 'minimal-button leftB',
+          action: tour.back
+        }, {
+          text: 'FAQ?',
+          classes: 'minimal-button',
+          action: tour.next
+        }, {
+          text: 'End',
+          classes: 'minimal-button rightB',
+          action: tour.next
+        }]
+      });
+
+    </script>
+-->	</body>
+</html>
