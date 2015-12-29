@@ -376,8 +376,11 @@
 var login = function() {
          if (!window.cordova) {
              facebookConnectPlugin.browserInit('163461217344351');
+             alert('a');
          }
+         alert('b');
          facebookConnectPlugin.login(["email"], function(response) {
+             alert('c');
              if (response.authResponse) {
                  facebookConnectPlugin.api('/me', null,
                      function(response) {
