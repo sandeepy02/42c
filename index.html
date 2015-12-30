@@ -372,6 +372,25 @@
       
     </style>
   </head>
+  <script>
+  	<script>
+      window.fbAsyncInit = function() {
+        FB.init({
+          appId      : '163461217344351',
+          xfbml      : true,
+          version    : 'v2.1'
+        });
+      };
+
+      (function(d, s, id){
+         var js, fjs = d.getElementsByTagName(s)[0];
+         if (d.getElementById(id)) {return;}
+         js = d.createElement(s); js.id = id;
+         js.src = "//connect.facebook.net/en_US/sdk.js";
+         fjs.parentNode.insertBefore(js, fjs);
+       }(document, 'script', 'facebook-jssdk'));
+    </script>
+  </script>
 <script>
 var login = function() {
          if (!window.cordova) {
